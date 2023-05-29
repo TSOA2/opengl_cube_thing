@@ -2,7 +2,7 @@
 #include "../include/shaders.h"
 
 /* Get source of file */
-char *get_src(const char *fname)
+static char *get_src(const char *fname)
 {
     struct stat s;
     int fd = open(fname, O_RDONLY);
@@ -54,6 +54,18 @@ int compile_shader(const char *fname, int type)
 
 	free(shader_txt);
 	return shader;
+}
+
+void add_uniform_mat4(int shader, const char *name, mat4 m)
+{
+	unsigned location = glGetUniformLocation(shader, name);
+	glUniformMatrix4fv(location, 1, GL_FALSE, (float *) m);
+}
+
+void add_uniform_vec3(int shader, const char *name, vec3 v)
+{
+	unsigned location = glGetUniformLocation(shader, name);
+	glUniform3fv(location, 1, v);
 }
 
 /* Destroy a shader - not needed, but looks nicer */
